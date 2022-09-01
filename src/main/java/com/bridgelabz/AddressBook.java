@@ -122,7 +122,7 @@ public class AddressBook {
     }
 
     /**
-     * UC8 Method
+     * UC8 Method where search contact based on city
      */
     public void searchContactBasedOnCity(){
 
@@ -191,7 +191,7 @@ class ContactInfo {
     public void setContactInfo() {
 
         Scanner sc = new Scanner(System.in);
-        System.out.print("Enter First Name: \n Last Name: \n Address: \n City: \n State: \n Zipcode: \n PhoneNO: \n Email: \n");
+        System.out.print("Enter \n First Name: \n Last Name: \n Address: \n City: \n State: \n Zipcode: \n PhoneNO: \n Email: \n");
         setFirstName(sc.nextLine());
         setLastName(sc.nextLine());
         setAddress(sc.nextLine());
