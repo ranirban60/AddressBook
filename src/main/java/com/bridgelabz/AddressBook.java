@@ -54,6 +54,9 @@ public class AddressBook {
         }
         obj.searchContactBasedOnCity(multiAddressBook);
         obj.sortContactsByPersonName(multiAddressBook);
+        obj.sortContactsByCity(multiAddressBook);
+        obj.sortContactsByState(multiAddressBook);
+        obj.sortContactsByZip(multiAddressBook);
     }
 
     /**
@@ -161,9 +164,63 @@ public class AddressBook {
         for (Map.Entry<String, AddressBook> addressBookMapEntry : multiAddressBook.entrySet()) {
             List<ContactInfo> sortedContacts = addressBookMapEntry.getValue().addressBook.values().stream().sorted(Comparator.comparing(contactInfo -> contactInfo.firstName + contactInfo.lastName)).collect(Collectors.toList());
             System.out.println("Sorted Contacts By name : ");
-            for (ContactInfo item : sortedContacts) {
-                System.out.println(item.getFirstName() + " " + item.getLastName());
+            for (ContactInfo currentContact : sortedContacts) {
+                System.out.println(currentContact.getFirstName() + " " + currentContact.getLastName());
             }
+            System.out.println("\n");
+        }
+    }
+
+    /**
+     * Method for sorting contacts based on City
+     *
+     * @param multiAddressBook HashMap containing all addressBooks is passed as a parameter
+     */
+    public void sortContactsByCity(HashMap<String, AddressBook> multiAddressBook) {
+
+        for (Map.Entry<String, AddressBook> addressBookMapEntry : multiAddressBook.entrySet()) {
+            List<ContactInfo> sortedContacts = addressBookMapEntry.getValue().addressBook.values().stream().sorted(Comparator.comparing(contactInfo -> contactInfo.city)).collect(Collectors.toList());
+            System.out.println("Sorted Contacts By City : ");
+            for (ContactInfo currentContact : sortedContacts) {
+                System.out.println("Name: " + currentContact.getFirstName() + " " + currentContact.getLastName() + " City "+ currentContact.getCity());
+            }
+            System.out.println("\n");
+
+        }
+    }
+
+    /**
+     * Method for sorting contacts based on State
+     *
+     * @param multiAddressBook HashMap containing all addressBooks is passed as a parameter
+     */
+    public void sortContactsByState(HashMap<String, AddressBook> multiAddressBook) {
+
+        for (Map.Entry<String, AddressBook> addressBookMapEntry : multiAddressBook.entrySet()) {
+            List<ContactInfo> sortedContacts = addressBookMapEntry.getValue().addressBook.values().stream().sorted(Comparator.comparing(contactInfo -> contactInfo.state)).collect(Collectors.toList());
+            System.out.println("Sorted Contacts By State : ");
+            for (ContactInfo currentContact : sortedContacts) {
+                System.out.println("Name: " + currentContact.getFirstName() + " " + currentContact.getLastName() + " State "+ currentContact.getState());
+            }
+            System.out.println("\n");
+
+        }
+    }
+
+    /**
+     * Method for sorting contacts based on Zipcode
+     *
+     * @param multiAddressBook HashMap containing all addressBooks is passed as a parameter
+     */
+    public void sortContactsByZip(HashMap<String, AddressBook> multiAddressBook) {
+
+        for (Map.Entry<String, AddressBook> addressBookMapEntry : multiAddressBook.entrySet()) {
+            List<ContactInfo> sortedContacts = addressBookMapEntry.getValue().addressBook.values().stream().sorted(Comparator.comparing(contactInfo -> contactInfo.zipcode)).collect(Collectors.toList());
+            System.out.println("Sorted Contacts By Zip : ");
+            for (ContactInfo currentContact : sortedContacts) {
+                System.out.println("Name: " + currentContact.getFirstName() + " " + currentContact.getLastName() + " Zip "+ currentContact.getZipcode());
+            }
+            System.out.println("\n");
         }
     }
 }
