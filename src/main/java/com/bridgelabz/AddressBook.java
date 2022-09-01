@@ -17,7 +17,7 @@ public class AddressBook{
 
         while (!is_Running) {
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Enter 1 to create a new contact , 2 to exit , 3 to edit existing contact");
+            System.out.println(" Enter \n 1 to create a new contact \n 2 to exit \n 3 to edit existing contact \n 4 to delete an existing contact");
             int choice = scanner.nextInt();
             if (choice == 1) {
                 ContactInfo contact = new ContactInfo();
@@ -30,8 +30,20 @@ public class AddressBook{
             }else if (choice==3){
                 addressBookObj.editContact();
                 addressBook.get(name).displayContactInfo();
+            }else if (choice==4){
+                addressBookObj.deleteContact();
             }
         }
+    }
+    public void deleteContact(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the first and last name of the contact you want to delete from AddressBook: ");
+        String name = scanner.nextLine().toUpperCase(Locale.ROOT);
+        if (addressBook.containsKey(name)) {
+            addressBook.remove(name);
+            System.out.println("Contact removed");
+        }else
+            System.out.println("Contact not found");
     }
 
 
