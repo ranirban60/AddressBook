@@ -7,7 +7,6 @@ public class AddressBook {
     static String name;
 
     public static void main(String[] args){
-
         System.out.println("Welcome to the ADDRESS BOOK");
         HashMap<String,ContactInfo> addressBook = new HashMap<>();
 
@@ -55,7 +54,7 @@ class ContactInfo{
 
     public void setContactInfo() {
 
-        Scanner sc = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);//Scanner is an input stream to be scanned
         System.out.print("Enter First Name: \n Last Name: \n Address: \n City: \n State: \n Zipcode: \n PhoneNO: \n Email: \n");
         setFirstName(sc.nextLine());
         setLastName(sc.nextLine());
