@@ -1,14 +1,13 @@
 package com.bridgelabz;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
 
 public class AddressBook {
     static String name;
     static boolean is_Running = false;
     public HashMap<String, ContactInfo> addressBook;
+    public HashMap<String, AddressBook> multiAdressBook = new HashMap<>();
+
 
     public AddressBook() {
         addressBook = new HashMap<>();
@@ -18,13 +17,14 @@ public class AddressBook {
     public static void main(String[] args) {
         System.out.println("Welcome to the ADDRESS BOOK");
 
-        HashMap<String, AddressBook> multiAdressBook = new HashMap<>();
+        AddressBook obj=new AddressBook();
+
         AddressBook addressBookObj1 = new AddressBook();
         AddressBook addressBookObj2 = new AddressBook();
         AddressBook addressBookObj3 = new AddressBook();
-        multiAdressBook.put("AB1", addressBookObj1);
-        multiAdressBook.put("AB2", addressBookObj2);
-        multiAdressBook.put("AB3", addressBookObj3);
+        obj.multiAdressBook.put("AB1", addressBookObj1);
+        obj.multiAdressBook.put("AB2", addressBookObj2);
+        obj.multiAdressBook.put("AB3", addressBookObj3);
 
         while (!is_Running) {
             Scanner scanner = new Scanner(System.in);
@@ -49,19 +49,20 @@ public class AddressBook {
                 ContactInfo contact = new ContactInfo();
                 contact.setContactInfo();
                 name = contact.firstName.toUpperCase(Locale.ROOT) + " " + contact.lastName.toUpperCase(Locale.ROOT);
-                if (multiAdressBook.get(key).addressBook.keySet().stream().noneMatch(k -> k.equals(name))){                 //JAVA STREAMS is used to check if any duplicate
-                    multiAdressBook.get(key).addressBook.put(name, contact);                                                // contact already exist in the addressBook
-                    multiAdressBook.get(key).addressBook.get(name).displayContactInfo();
+                if (obj.multiAdressBook.get(key).addressBook.keySet().stream().noneMatch(k -> k.equals(name))){       //JAVA STREAMS is used to check if any duplicate
+                    obj.multiAdressBook.get(key).addressBook.put(name, contact);                                      //contact already exist in the addressBook
+                    obj.multiAdressBook.get(key).addressBook.get(name).displayContactInfo();
                 }
                 else System.out.println("Contact already exist duplicate not allowed");
             } else if (choice == 2) {
                 is_Running = true;
             } else if (choice == 3) {
-                multiAdressBook.get(key).editContact();
+                obj.multiAdressBook.get(key).editContact();
             } else if (choice == 4) {
-                multiAdressBook.get(key).deleteContact();
+                obj.multiAdressBook.get(key).deleteContact();
             }
         }
+        obj.searchContactBasedOnCity();
     }
 
     /**
@@ -118,6 +119,31 @@ public class AddressBook {
             }
             addressBook.get(name).displayContactInfo();
         } else System.out.println("Contact not found");
+    }
+
+    /**
+     * UC8 Method
+     */
+    public void searchContactBasedOnCity(){
+
+        ArrayList<String> persons = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the city to search the contacts based on city");
+        String searchCity = scanner.nextLine();
+
+        for (Map.Entry<String,AddressBook> addressBookEntry: multiAdressBook.entrySet()) {
+            addressBookEntry.getValue();
+            System.out.println(addressBookEntry.getKey());
+            for (Map.Entry<String,ContactInfo> contactEntry: addressBookEntry.getValue().addressBook.entrySet()) {
+                String result = addressBookEntry.getValue().addressBook.get(contactEntry.getKey()).showContact();
+                System.out.println(contactEntry.getKey());
+                if (result.contains(searchCity)){
+                    System.out.println("person = "+contactEntry.getKey());
+                    persons.add(contactEntry.getKey());
+                }
+            }
+        }
+        System.out.println("List of persons in the required city are: "+persons);
     }
 }
 
@@ -182,5 +208,10 @@ class ContactInfo {
     public void displayContactInfo() {
         System.out.print(" First Name: " + firstName + "\n Last Name: " + lastName + "\n Address: " + address +
                 "\n City: " + city + "\n State: " + state + "\n Zipcode: " + zipcode + "\n PhoneNO: " + phoneNo + "\n Email: " + email + "\n");
+    }
+
+    public String showContact(){
+        return  " First Name: " + firstName + "\n Last Name: " + lastName + "\n Address: " + address +
+                "\n City: " + city + "\n State: " + state + "\n Zipcode: " + zipcode + "\n PhoneNO: " + phoneNo + "\n Email: " + email + "\n";
     }
 }
