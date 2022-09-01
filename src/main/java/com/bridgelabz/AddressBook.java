@@ -30,27 +30,21 @@ public class AddressBook {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Enter 1 for addressBook1, 2 for addressBook2, 3 for addressBook3 and 4 to exit");
             int option = scanner.nextInt();
-            String key = null;
-            switch (option) {
-                case 1:
-                    key = "AB1";
-                    break;
-                case 2:
-                    key = "AB2";
-                    break;
-                case 3:
-                    key = "AB3";
-                    break;
-            }
+            String key = switch (option) {
+                case 1 -> "AB1";
+                case 2 -> "AB2";
+                case 3 -> "AB3";
+                default -> null;
+            };
             if (option == 4) break;
-            System.out.println(" Enter \n 1 to create a new contact \n 2 to exit \n 3 to edit existing contact \n 4 to delete an existing contact");
+            System.out.println(" Enter\n 1 to create a new contact \n 2 to exit \n 3 to edit existing contact \n 4 to delete an existing contact");
             int choice = scanner.nextInt();
             if (choice == 1) {
                 ContactInfo contact = new ContactInfo();
                 contact.setContactInfo();
                 name = contact.firstName.toUpperCase(Locale.ROOT) + " " + contact.lastName.toUpperCase(Locale.ROOT);
-                if (obj.multiAdressBook.get(key).addressBook.keySet().stream().noneMatch(k -> k.equals(name))){       //JAVA STREAMS is used to check if any duplicate
-                    obj.multiAdressBook.get(key).addressBook.put(name, contact);                                      //contact already exist in the addressBook
+                if (obj.multiAdressBook.get(key).addressBook.keySet().stream().noneMatch(k -> k.equals(name))){                 //JAVA STREAMS is used to check if any duplicate
+                    obj.multiAdressBook.get(key).addressBook.put(name, contact);                                                //contact already exist in the addressBook
                     obj.multiAdressBook.get(key).addressBook.get(name).displayContactInfo();
                 }
                 else System.out.println("Contact already exist duplicate not allowed");
@@ -122,28 +116,28 @@ public class AddressBook {
     }
 
     /**
-     * UC8 Method where search contact based on city
+     * UC8,9,10 Methods for searching contacts based on city or state
      */
     public void searchContactBasedOnCity(){
 
-        ArrayList<String> persons = new ArrayList<>();
+        HashMap<String,String> personCityDictionary = new HashMap<>();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the city to search the contacts based on city");
         String searchCity = scanner.nextLine();
 
         for (Map.Entry<String,AddressBook> addressBookEntry: multiAdressBook.entrySet()) {
-            addressBookEntry.getValue();
             System.out.println(addressBookEntry.getKey());
             for (Map.Entry<String,ContactInfo> contactEntry: addressBookEntry.getValue().addressBook.entrySet()) {
                 String result = addressBookEntry.getValue().addressBook.get(contactEntry.getKey()).showContact();
                 System.out.println(contactEntry.getKey());
                 if (result.contains(searchCity)){
-                    System.out.println("person = "+contactEntry.getKey());
-                    persons.add(contactEntry.getKey());
+                    personCityDictionary.put(contactEntry.getKey(),searchCity);
                 }
             }
         }
-        System.out.println("List of persons in the required city are: "+persons);
+        for (Map.Entry<String,String> pEntry : personCityDictionary.entrySet() ) {
+            System.out.println("Name= "+pEntry.getKey()+", City= "+ pEntry.getValue());
+        }
     }
 }
 
@@ -191,7 +185,7 @@ class ContactInfo {
     public void setContactInfo() {
 
         Scanner sc = new Scanner(System.in);
-        System.out.print("Enter \n First Name: \n Last Name: \n Address: \n City: \n State: \n Zipcode: \n PhoneNO: \n Email: \n");
+        System.out.print("Enter First Name: \n Last Name: \n Address: \n City: \n State: \n Zipcode: \n PhoneNO: \n Email: \n");
         setFirstName(sc.nextLine());
         setLastName(sc.nextLine());
         setAddress(sc.nextLine());
