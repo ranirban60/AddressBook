@@ -1,5 +1,9 @@
 package com.bridgelabz;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -10,7 +14,7 @@ public class AddressBook {
     public ArrayList<ContactInfo> listOfContacts = new ArrayList<>();
 
     //Driver code
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         HashMap<String, AddressBook> multiAddressBook = new HashMap<>();
         System.out.println("Welcome to the ADDRESS BOOK");
         AddressBook obj = new AddressBook();
@@ -22,18 +26,37 @@ public class AddressBook {
         multiAddressBook.put("AB2", addressBookObj2);
         multiAddressBook.put("AB3", addressBookObj3);
 
+
+        obj.createContact(multiAddressBook);
+        obj.readFromFile();
+    }
+
+    public void createContact(HashMap<String, AddressBook> multiAddressBook) throws IOException {
+
+        BufferedWriter bw1 = new BufferedWriter(new FileWriter("D:\\Intellij IDEA\\AddressBook\\AddressBook1.txt"));
+        BufferedWriter bw2 = new BufferedWriter(new FileWriter("D:\\Intellij IDEA\\AddressBook\\AddressBook2.txt"));
+        BufferedWriter bw3 = new BufferedWriter(new FileWriter("D:\\Intellij IDEA\\AddressBook\\AddressBook3.txt"));
         while (!is_Running) {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Enter 1 for addressBook1, 2 for addressBook2, 3 for addressBook3 and 4 to exit");
             int option = scanner.nextInt();
-            String key = switch (option) {
+            String key = switch(option) {
                 case 1 -> "AB1";
                 case 2 -> "AB2";
                 case 3 -> "AB3";
                 default -> null;
             };
             if (option == 4) break;
-            System.out.println(" Enter \n 1 to create a new contact \n 2 to exit \n 3 to edit existing contact \n 4 to delete an existing contact");
+            System.out.println(" Enter: " +
+                    "1.Create a new contact " +
+                    "2.Exit " +
+                    "3.Edit existing contact " +
+                    "4.Delete an existing contact " +
+                    "5.SearchContactBasedOnCity " +
+                    "6.SortContactsByPersonName " +
+                    "7.SortContactsByCity " +
+                    "8.SortContactsByState " +
+                    "9.SortContactsByZip");
             int choice = scanner.nextInt();
             if (choice == 1) {
                 ContactInfo contact = new ContactInfo();
@@ -41,8 +64,22 @@ public class AddressBook {
                 name = contact.firstName.toUpperCase(Locale.ROOT) + " " + contact.lastName.toUpperCase(Locale.ROOT);
                 if (multiAddressBook.get(key).addressBook.keySet().stream().noneMatch(k -> k.equals(name))) {                 //JAVA STREAMS is used to check if any duplicate
                     multiAddressBook.get(key).addressBook.put(name, contact);
-                    multiAddressBook.get(key).listOfContacts.add(contact);                                                                                                     //contact already exist in the addressBook
+                    multiAddressBook.get(key).listOfContacts.add(contact);                                                     //contact already exist in the addressBook
                     multiAddressBook.get(key).addressBook.get(name).displayContactInfo();
+                    String outputData = multiAddressBook.get(key).addressBook.get(name).showContact();
+
+                    switch (option) {
+                        case 1 -> {
+                            bw1.write(outputData);
+                        }
+                        case 2 -> {
+                            bw2.write(outputData);
+                        }
+                        case 3 -> {
+                            bw3.write(outputData);
+                        }
+                    }
+
                 } else System.out.println("Contact already exist duplicate not allowed");
             } else if (choice == 2) {
                 is_Running = true;
@@ -50,13 +87,48 @@ public class AddressBook {
                 multiAddressBook.get(key).editContact();
             } else if (choice == 4) {
                 multiAddressBook.get(key).deleteContact();
+            } else if (choice == 5) {
+                searchContactBasedOnCity(multiAddressBook);
+            } else if (choice == 6) {
+                sortContactsByPersonName(multiAddressBook);
+            } else if (choice == 7) {
+                sortContactsByCity(multiAddressBook);
+            } else if (choice == 8) {
+                sortContactsByState(multiAddressBook);
+            } else if (choice == 9) {
+                sortContactsByZip(multiAddressBook);
             }
         }
-        obj.searchContactBasedOnCity(multiAddressBook);
-        obj.sortContactsByPersonName(multiAddressBook);
-        obj.sortContactsByCity(multiAddressBook);
-        obj.sortContactsByState(multiAddressBook);
-        obj.sortContactsByZip(multiAddressBook);
+        bw1.close();
+        bw2.close();
+        bw3.close();
+
+    }
+
+    /**
+     * Method for reading contacts stored in addressBook .txt File
+     * @throws IOException
+     */
+    public void readFromFile() throws IOException {
+        String contact;
+        System.out.println("List of Contacts in AddressBook 1 : ");
+        System.out.println("firstName, lastName, address, city, state, zipcode, phoneNo, email");
+        BufferedReader br1 = new BufferedReader(new FileReader("D:\\Intellij IDEA\\AddressBook\\AddressBook1.txt"));
+        while ((contact = br1.readLine()) != null){
+            System.out.println(contact);
+        }
+        System.out.println("\nList of Contacts in AddressBook 2 : ");
+        System.out.println("firstName, lastName, address, city, state, zipcode, phoneNo, email");
+        BufferedReader br2 = new BufferedReader(new FileReader("D:\\Intellij IDEA\\AddressBook\\AddressBook2.txt"));
+        while ((contact = br2.readLine()) != null){
+            System.out.println(contact);
+        }
+        System.out.println("\nList of Contacts in AddressBook 3 : ");
+        System.out.println("firstName, lastName, address, city, state, zipcode, phoneNo, email");
+        BufferedReader br3 = new BufferedReader(new FileReader("D:\\Intellij IDEA\\AddressBook\\AddressBook3.txt"));
+        while ((contact = br3.readLine()) != null){
+            System.out.println(contact);
+        }
     }
 
     /**

@@ -80,7 +80,7 @@ class ContactInfo {
     public void setContactInfo() {
 
         Scanner sc = new Scanner(System.in);
-        System.out.print("Enter First Name: \n Last Name: \n Address: \n City: \n State: \n Zipcode: \n PhoneNO: \n Email: \n");
+        System.out.print("Enter \n First Name: \n Last Name: \n Address: \n City: \n State: \n Zipcode: \n PhoneNO: \n Email: \n");
         setFirstName(sc.nextLine());
         setLastName(sc.nextLine());
         setAddress(sc.nextLine());
@@ -100,7 +100,7 @@ class ContactInfo {
     }
 
     public String showContact() {
-        return " First Name: " + firstName + "\n Last Name: " + lastName + "\n Address: " + address +
-                "\n City: " + city + "\n State: " + state + "\n Zipcode: " + zipcode + "\n PhoneNO: " + phoneNo + "\n Email: " + email + "\n";
+        return  firstName + "," + lastName + "," + address +
+                "," + city + "," + state + "," + zipcode + "," + phoneNo + "," + email + "\n";
     }
 }
