@@ -103,4 +103,9 @@ class ContactInfo {
         return  firstName + "," + lastName + "," + address +
                 "," + city + "," + state + "," + zipcode + "," + phoneNo + "," + email + "\n";
     }
+
+    public String showContactCSV() {
+        return  firstName + "," + lastName + "," + address +
+                "," + city + "," + state + "," + zipcode + "," + phoneNo + "," + email;
+    }
 }

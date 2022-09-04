@@ -1,9 +1,10 @@
 package com.bridgelabz;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
+
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -14,7 +15,7 @@ public class AddressBook {
     public ArrayList<ContactInfo> listOfContacts = new ArrayList<>();
 
     //Driver code
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, CsvValidationException {
         HashMap<String, AddressBook> multiAddressBook = new HashMap<>();
         System.out.println("Welcome to the ADDRESS BOOK");
         AddressBook obj = new AddressBook();
@@ -29,6 +30,7 @@ public class AddressBook {
 
         obj.createContact(multiAddressBook);
         obj.readFromFile();
+        obj.readFromCSVFile();
     }
 
     public void createContact(HashMap<String, AddressBook> multiAddressBook) throws IOException {
@@ -36,11 +38,21 @@ public class AddressBook {
         BufferedWriter bw1 = new BufferedWriter(new FileWriter("D:\\Intellij IDEA\\AddressBook\\AddressBook1.txt"));
         BufferedWriter bw2 = new BufferedWriter(new FileWriter("D:\\Intellij IDEA\\AddressBook\\AddressBook2.txt"));
         BufferedWriter bw3 = new BufferedWriter(new FileWriter("D:\\Intellij IDEA\\AddressBook\\AddressBook3.txt"));
+
+        CSVWriter csv1 = new CSVWriter(new FileWriter("D:\\Intellij IDEA\\AddressBook\\AddressBook1.csv"));
+        CSVWriter csv2 = new CSVWriter(new FileWriter("D:\\Intellij IDEA\\AddressBook\\AddressBook2.csv"));
+        CSVWriter csv3 = new CSVWriter(new FileWriter("D:\\Intellij IDEA\\AddressBook\\AddressBook3.csv"));
+
+        String[] header = {"FirstName", "LastName", "Address", "City", "State", "Zipcode", "PhoneNo", "Email"};
+        csv1.writeNext(header);
+        csv2.writeNext(header);
+        csv3.writeNext(header);
+
         while (!is_Running) {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Enter 1 for addressBook1, 2 for addressBook2, 3 for addressBook3 and 4 to exit");
             int option = scanner.nextInt();
-            String key = switch(option) {
+            String key = switch (option) {
                 case 1 -> "AB1";
                 case 2 -> "AB2";
                 case 3 -> "AB3";
@@ -67,16 +79,20 @@ public class AddressBook {
                     multiAddressBook.get(key).listOfContacts.add(contact);                                                     //contact already exist in the addressBook
                     multiAddressBook.get(key).addressBook.get(name).displayContactInfo();
                     String outputData = multiAddressBook.get(key).addressBook.get(name).showContact();
-
+                    String csvOutputString = multiAddressBook.get(key).addressBook.get(name).showContactCSV();
+                    String[] csvData = csvOutputString.split(",");
                     switch (option) {
                         case 1 -> {
                             bw1.write(outputData);
+                            csv1.writeNext(csvData);
                         }
                         case 2 -> {
                             bw2.write(outputData);
+                            csv2.writeNext(csvData);
                         }
                         case 3 -> {
                             bw3.write(outputData);
+                            csv3.writeNext(csvData);
                         }
                     }
 
@@ -103,10 +119,47 @@ public class AddressBook {
         bw2.close();
         bw3.close();
 
+        csv1.close();
+        csv2.close();
+        csv3.close();
     }
 
     /**
-     * Method for reading contacts stored in addressBook .txt File
+     * Method for reading data from csv file
+     *
+     * @throws IOException
+     * @throws CsvValidationException
+     */
+    public void readFromCSVFile() throws IOException, CsvValidationException {
+        System.out.println("\nReading from CSV files:  \n");
+        String[] contactInfo;
+        CSVReader csvR1 = new CSVReader(new FileReader("D:\\Intellij IDEA\\AddressBook\\AddressBook1.csv"));
+        while ((contactInfo = csvR1.readNext()) != null) {
+            for (String cell : contactInfo) {
+                System.out.print(cell + "\t");
+            }
+            System.out.println();
+        }
+        System.out.println("\n");
+        CSVReader csvR2 = new CSVReader(new FileReader("D:\\Intellij IDEA\\AddressBook\\AddressBook2.csv"));
+        while ((contactInfo = csvR2.readNext()) != null) {
+            for (String cell : contactInfo) {
+                System.out.print(cell + "\t");
+            }
+            System.out.println();
+        }
+        System.out.println("\n");
+        CSVReader csvR3 = new CSVReader(new FileReader("D:\\Intellij IDEA\\AddressBook\\AddressBook3.csv"));
+        while ((contactInfo = csvR3.readNext()) != null) {
+            for (String cell : contactInfo) {
+                System.out.print(cell + "\t");
+            }
+            System.out.println();
+        }
+    }
+
+    /**
+     * Method for reading contacts stored in addressBook.txt File
      * @throws IOException
      */
     public void readFromFile() throws IOException {
